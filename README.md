@@ -3,4 +3,4 @@
 Сборка qmake с подключением PostgreSQL версии 17
 Реализовано подключение с сервером через host и port
 
-![alt text](/Users/tendence331/Desktop)
+![alt text]()
