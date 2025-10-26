@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LoginForm</class>
+ <widget class="QWidget" name="LoginForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>367</width>
+    <height>168</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(213, 206, 197);</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <property name="labelAlignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Логин:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 0, 0);
+font: 14pt &quot;Tahoma&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Пароль:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="loginEdit">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+color: black;
+border-width: 3px;
+border-style: groove;
+border-top-color: rgb(128, 128, 128);
+border-left-color: rgb(128, 128, 128);
+border-right-color: rgb(128, 128, 128);
+border-bottom-color: rgb(212, 208, 200);
+padding: 3px;
+font: 14pt &quot;Tahoma&quot;;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="passwordEdit">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+color: black;
+border-width: 3px;
+border-style: groove;
+border-top-color: rgb(128, 128, 128);
+border-left-color: rgb(128, 128, 128);
+border-right-color: rgb(128, 128, 128);
+border-bottom-color: rgb(212, 208, 200);
+padding: 3px;
+font: 14pt &quot;Tahoma&quot;;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+     <item>
+      <widget class="QPushButton" name="registrationPushButton">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(213, 206, 197);
+color: rgb(0, 0, 0);
+border-width: 2px;
+border-style: outset;
+border-top-color: rgb(212, 208, 200);
+border-left-color: rgb(212, 208, 200);
+border-right-color: rgb(128, 128, 128);
+border-bottom-color: rgb(128, 128, 128);
+padding: 3px;
+font: 14pt &quot;Tahoma&quot;;
+</string>
+       </property>
+       <property name="text">
+        <string>Регистрация</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(213, 206, 197);
+color: rgb(0, 0, 0);
+border-width: 2px;
+border-style: outset;
+border-top-color: rgb(212, 208, 200);
+border-left-color: rgb(212, 208, 200);
+border-right-color: rgb(128, 128, 128);
+border-bottom-color: rgb(128, 128, 128);
+padding: 3px;
+font: 14pt &quot;Tahoma&quot;;
+</string>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
