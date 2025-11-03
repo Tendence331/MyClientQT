@@ -19,7 +19,7 @@ public:
     explicit MainWindow(int userId, QString userName, std::shared_ptr<Database> dbPtr = nullptr, QWidget *parent = nullptr);
     ~MainWindow();
     static MainWindow* createClient(std::shared_ptr<Database> dbPtr = nullptr);
-    static int kInstanceCount;
+    static int kInstanceCount; //
 
 private slots:
 
@@ -33,11 +33,15 @@ private slots:
 
     void on_connectButtonTCP_clicked();         // соед с сервером
     void on_disconnectButtonTCP_clicked();      // откл от сервера
+    void connectToServer(const QString& host, quint16 port);    // подключение к серверу (на кнопке)
 
+    void setUIEnabled(bool enabled);
+    void onReadyRead();
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<Database> m_dbPtr;
     int m_userId;
+    bool m_isBanned;
     QString m_userName;
     QTcpSocket* m_socket;
 };
