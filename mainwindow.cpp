@@ -8,7 +8,7 @@
 #include <QTimer>
 
 
-int MainWindow::kInstanceCount = 0;
+int MainWindow::kInstanceCount = 0; //
 
 MainWindow::MainWindow(int userId, QString userName, std::shared_ptr<Database> dbPtr, QWidget *parent)
     : QMainWindow(parent)
@@ -28,12 +28,7 @@ MainWindow::MainWindow(int userId, QString userName, std::shared_ptr<Database> d
     connect(timer, &QTimer::timeout, this, &MainWindow::updateChats);
     timer->start(10);
     ui->statusbar->setStyleSheet("color:rgb(0,0,0);");
-    connect(m_socket, &QTcpSocket::connected, this, [=]{
-        ui->statusbar->showMessage(QString("Подключено к серверу"));
-    });
-    connect(m_socket, &QTcpSocket::disconnected, this, [this]{
-        ui->statusbar->showMessage("Отключено от сервера");
-    });
+    m_isBanned = false; // флаг бана
 }
 
 MainWindow::~MainWindow()
@@ -82,7 +77,7 @@ void MainWindow::on_sendMessageButton_clicked()
 
 
 void MainWindow::on_sendMessagePrivateButton_clicked()
-{
+{   
     QDialog dial(this);
     dial.setModal(true);
     auto l = new QVBoxLayout();
@@ -172,32 +167,7 @@ void MainWindow::on_actionCloseClient_triggered()
 
 void MainWindow::on_connectButtonTCP_clicked()
 {
-    // состояние подключения
-    if(m_socket->state() == QAbstractSocket::ConnectedState)
-    {
-        ui->statusbar->showMessage("Уже подключено!");
-        return;
-    }
-    QString host = ui->ipEdit->text();                  // записываем данные хоста и порта
-    quint16 port = ui->portEdit->text().toUShort();
-    if(host.isEmpty() || port == 0)                     // если пусты или не введены
-    {
-        QMessageBox::critical(this, "Ошибка", "Введите значения");
-        return;
-    }
-    connect(m_socket, &QTcpSocket::errorOccurred, this, [this](QAbstractSocket::SocketError error){
-        switch (error) {
-        case QAbstractSocket::ConnectionRefusedError:
-            ui->statusbar->showMessage("Ошибка: сервер недоступен или не запущен");
-            break;
-        case QAbstractSocket::HostNotFoundError:
-            ui->statusbar->showMessage("Ошибка: хост не найден");
-        default:
-            ui->statusbar->showMessage("Ошибка: " + m_socket->errorString());
-            break;
-        }
-    });
-    m_socket->connectToHost(host, port);
+    connectToServer(ui->ipEdit->text(), ui->portEdit->text().toUShort());
 }
 
 
@@ -211,6 +181,56 @@ void MainWindow::on_disconnectButtonTCP_clicked()
     else
     {
         ui->statusbar->showMessage("Нет активного подключения");
+    }
+}
+
+void MainWindow::connectToServer(const QString &host, quint16 port)
+{
+    if(m_socket)
+    {
+        m_socket->deleteLater();
+    }
+    m_socket = new QTcpSocket(this);
+    connect(m_socket, &QTcpSocket::connected, this, [=]{
+        ui->statusbar->showMessage("Подключено к серверу");
+        QString loginPacket = "LOGIN:" + m_userName + "\n";
+        m_socket->write(loginPacket.toUtf8());
+        setUIEnabled(true); // включаем UI
+    });
+    connect(m_socket, &QTcpSocket::disconnected, this, [this]{
+        ui->statusbar->showMessage("Отключено от сервера");
+        setUIEnabled(false); // блокируем UI при отключении
+    });
+    connect(m_socket, &QTcpSocket::readyRead, this, &MainWindow::onReadyRead);
+    m_socket->connectToHost(host, port);
+}
+
+void MainWindow::setUIEnabled(bool enabled)
+{
+    ui->messagelineEdit->setEnabled(enabled);
+    ui->sendMessageButton->setEnabled(enabled);
+    ui->sendMessagePrivateButton->setEnabled(enabled);
+    ui->commonChatBrowser->setEnabled(enabled);
+    ui->privateChatBrowser->setEnabled(enabled);
+}
+
+
+
+void MainWindow::onReadyRead()
+{
+    while(m_socket->canReadLine())
+    {
+        QByteArray data = m_socket->readLine().trimmed();
+        QString message = QString::fromUtf8(data);
+        if(message == "BANNED")
+        {
+            m_isBanned = true;
+            QMessageBox::warning(this, "Блокировка", "Вы были заблокированы сервером!");
+            m_socket->disconnectFromHost();
+            setUIEnabled(false);
+            return;
+        }
+        ui->commonChatBrowser->append(message);
     }
 }
 
